@@ -1,0 +1,34 @@
+{
+  "name": "getir-nodejs-bootcamp-week-2-assignment-burakkisacik",
+  "version": "1.0.0",
+  "description": "http server assignment ",
+  "main": "index.js",
+  "scripts": {
+    "format": "prettier --write ./src/**/*.js",
+    "lint": "eslint ./src/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/getir-nodejs-bootcamp/getir-nodejs-bootcamp-week-2-assignment-burakkisacik.git"
+  },
+  "keywords": [
+    "http",
+    "nodejs",
+    "fs"
+  ],
+  "author": "Burak Kısacık",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/getir-nodejs-bootcamp/getir-nodejs-bootcamp-week-2-assignment-burakkisacik/issues"
+  },
+  "homepage": "https://github.com/getir-nodejs-bootcamp/getir-nodejs-bootcamp-week-2-assignment-burakkisacik#readme",
+  "devDependencies": {
+    "eslint": "^8.3.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-prettier": "^4.0.0",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.4.1"
+  }
+}
