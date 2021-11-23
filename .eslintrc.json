@@ -10,6 +10,9 @@
   },
   "plugins": ["prettier"],
   "rules": {
-    "no-console": "off"
+    "no-console": "off",
+    "radix": "off",
+    "eqeqeq": "off",
+    "no-restricted-globals": "off"
   }
 }
