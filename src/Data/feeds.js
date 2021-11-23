@@ -1,4 +1,4 @@
-const randomTimeStamp = require("./utils/randomTimeStamp");
+const randomTimeStamp = require("../utils/randomTimeStamp");
 
 module.exports = [
   {

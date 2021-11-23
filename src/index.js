@@ -1,17 +1,66 @@
 const http = require("http");
 const url = require("url");
+const fs = require("fs");
+const path = require("path");
 const colors = require("colors"); // eslint-disable-line
-const feeds = require("./feeds");
+const feeds = require("./Data/feeds");
+const contactInfo = require("./Data/contactInfo");
 const calculateFibonacciNumber = require("./utils/fibonacci");
 
 const server = http.createServer((req, res) => {
+  const requestStart = Date.now();
+
   // parse url to take query parameters and path
   const queryObject = url.parse(req.url, true).query;
-  const path = url.parse(req.url, true).pathname;
-  const { method } = req;
+
+  const userPath = url.parse(req.url, true).pathname;
+
+  res.on("finish", () => {
+    const { method, rawHeaders, httpVersion, socket } = req;
+    const { remoteAddress, remoteFamily } = socket;
+    const { statusCode, statusMessage } = res;
+    const headers = res.getHeaders();
+    const logData = {
+      timestamp: Date.now(),
+      processingTime: Date.now() - requestStart,
+      rawHeaders,
+      httpVersion,
+      userPath,
+      method,
+      queryObject,
+      remoteAddress,
+      remoteFamily,
+      response: {
+        statusCode,
+        statusMessage,
+        headers,
+      },
+    };
+
+    fs.appendFile(
+      path.join(__dirname, "/Analytics", "log.txt"),
+      `${JSON.stringify(logData)}\n*******************\n`,
+      (err) => {
+        if (err) {
+          fs.appendFile(
+            path.join(__dirname, "/Analytics", "errors.txt"),
+            `${err.message}\n*******************\n`,
+            (error) => {
+              console.log(error.message);
+            }
+          );
+          console.log(err.message);
+        }
+        console.log(
+          "Request has been logged. Please look into /Analytics/log.txt".magenta
+            .underline
+        );
+      }
+    );
+  });
 
   // paths and their corresponding responses
-  if (path === "/" && method === "GET") {
+  if (userPath === "/" && req.method === "GET") {
     res.writeHead(200, { "Content-type": "application/json" });
     res.write(
       JSON.stringify({
@@ -20,7 +69,7 @@ const server = http.createServer((req, res) => {
       })
     );
     res.end();
-  } else if (path === "/fibo" && method === "POST") {
+  } else if (userPath === "/fibo" && req.method === "POST") {
     if (queryObject.num) {
       new Promise((resolve, reject) => {
         if (!isNaN(queryObject.num)) {
@@ -65,7 +114,7 @@ const server = http.createServer((req, res) => {
       );
       res.end();
     }
-  } else if (path === "/myFeed" && method === "GET") {
+  } else if (userPath === "/myFeed" && req.method === "GET") {
     res.writeHead(200, { "Content-type": "application/json" });
     res.write(
       JSON.stringify({
@@ -74,7 +123,7 @@ const server = http.createServer((req, res) => {
       })
     );
     res.end();
-  } else if (path === "/about" && method === "GET") {
+  } else if (userPath === "/about" && req.method === "GET") {
     res.writeHead(200, { "Content-type": "application/json" });
     res.write(
       JSON.stringify({
@@ -83,12 +132,12 @@ const server = http.createServer((req, res) => {
       })
     );
     res.end();
-  } else if (path === "/contact" && method === "GET") {
+  } else if (userPath === "/contact" && req.method === "GET") {
     res.writeHead(200, { "Content-type": "application/json" });
     res.write(
       JSON.stringify({
         success: true,
-        data: "Contact Page",
+        data: contactInfo,
       })
     );
     res.end();
