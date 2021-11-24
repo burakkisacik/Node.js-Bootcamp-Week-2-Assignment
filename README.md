@@ -35,13 +35,13 @@ npm run start
 
 # Routes And Parameters
 
-| Routes   | Query Parameters |               Return |
-| -------- | :--------------: | -------------------: |
-| /        |        -         |                 page |
-| /fibo    |       num        | Nth Fibonacci Number |
-| /myFeed  |        -         |                 page |
-| /about   |        -         |                 page |
-| /contact |        -         |                 page |
+| Method | Routes   | Query Parameters |               Return |
+| ------ | -------- | :--------------: | -------------------: |
+| GET    | /        |        -         |                 page |
+| POST   | /fibo    |       num        | Nth Fibonacci Number |
+| GET    | /myFeed  |        -         |                 page |
+| GET    | /about   |        -         |                 page |
+| GET    | /contact |        -         |                 page |
 
 # Notes
 
