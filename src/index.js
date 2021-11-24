@@ -7,19 +7,26 @@ const feeds = require("./Data/feeds");
 const contactInfo = require("./Data/contactInfo");
 const calculateFibonacciNumber = require("./utils/fibonacci");
 
+// Create server instance
 const server = http.createServer((req, res) => {
+  // The time stamp of when the request was made
   const requestStart = Date.now();
 
   // parse url to take query parameters and path
   const queryObject = url.parse(req.url, true).query;
 
+  // Get the path of the request
   const userPath = url.parse(req.url, true).pathname;
 
+  // When the response process is finished log following infos to the file system
   res.on("finish", () => {
+    // necessary infos
     const { method, rawHeaders, httpVersion, socket } = req;
     const { remoteAddress, remoteFamily } = socket;
     const { statusCode, statusMessage } = res;
     const headers = res.getHeaders();
+
+    // log object
     const logData = {
       timestamp: Date.now(),
       processingTime: Date.now() - requestStart,
@@ -37,6 +44,7 @@ const server = http.createServer((req, res) => {
       },
     };
 
+    // write log to file system
     fs.appendFile(
       path.join(__dirname, "/Analytics", "log.txt"),
       `${JSON.stringify(logData)}\n*******************\n`,
@@ -71,6 +79,10 @@ const server = http.createServer((req, res) => {
     res.end();
   } else if (userPath === "/fibo" && req.method === "POST") {
     if (queryObject.num) {
+      /* 
+        Calculating fibonacci number can be time consuming depending on the number.
+        So that making this process asynchronous helps us to not block entire application.
+      */
       new Promise((resolve, reject) => {
         if (!isNaN(queryObject.num)) {
           const nthFibonacciNumber = calculateFibonacciNumber(queryObject.num);
@@ -109,7 +121,8 @@ const server = http.createServer((req, res) => {
       res.write(
         JSON.stringify({
           success: false,
-          data: "Please provide a number in the query. Example: /fibo?num=12",
+          error: "Please provide a number in the query. Example: /fibo?num=12",
+          data: null,
         })
       );
       res.end();
@@ -156,6 +169,7 @@ const server = http.createServer((req, res) => {
 
 const PORT = 3000;
 
+// Start the server and listen on port 3000
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`.yellow.bold);
 });
