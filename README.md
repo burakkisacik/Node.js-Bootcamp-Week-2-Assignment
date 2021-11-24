@@ -52,5 +52,4 @@ In the "/fibo" route, because of calculating the fibonacci number takes a long t
 - Node.js
 - Postman
 - Git
-- Webpack
 - ESLint
